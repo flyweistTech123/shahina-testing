@@ -99,11 +99,11 @@ const LogIn = () => {
     }
   };
 
-  const tokenSaver = (res) => {
-    const Token = res?.data?.accessToken;
-    localStorage.setItem("Token", Token);
-    return;
-  };
+  // const tokenSaver = (res) => {
+  //   const Token = res?.data?.accessToken;
+  //   localStorage.setItem("Token", Token);
+  //   return;
+  // };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -113,7 +113,7 @@ const LogIn = () => {
         payload,
         setLoading,
         additionalFunctions: [
-          (res) => tokenSaver(res),
+          // (res) => tokenSaver(res),
           () => pushItemInApi(),
           () => pushDummyService(),
           // () => window.location.href='/my-profile',
