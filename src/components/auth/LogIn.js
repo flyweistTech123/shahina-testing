@@ -116,7 +116,7 @@ const LogIn = () => {
           (res) => tokenSaver(res),
           () => pushItemInApi(),
           () => pushDummyService(),
-          () => window.location.assign('/my-profile'),
+          () => setTimeout(() => window.location.replace('/my-profile'), 100),
         ],
         dispatchFunc: [(res) => Login(res?.data?.data)],
       })
