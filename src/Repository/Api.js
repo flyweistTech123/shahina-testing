@@ -1261,7 +1261,10 @@ export const create_module_redux = ({
           Authorization: `Bearer ${localStorage.getItem("Token")}`,
         },
       });
-      if (res) {
+      const Token = res?.data?.accessToken;
+      localStorage.setItem("Token", Token);
+      const myToken = localStorage.getItem('Token')
+      if (res && myToken) {
         dispatchFunc.forEach((func) => {
           if (typeof func === "function") {
             dispatch(func(res));
