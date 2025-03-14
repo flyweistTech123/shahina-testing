@@ -101,27 +101,47 @@ const LogIn = () => {
 
   const tokenSaver = (res) => {
     const Token = res?.data?.accessToken;
+    if (!Token) {
+      throw new Error("Access token not found in response");
+    }
     localStorage.setItem("Token", Token);
-    return;
+    return Token; // Return the token for further validation if needed
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    dispatch(
-      create_module_redux({
-        url: "api/v1/user/signin",
-        payload,
-        setLoading,
-        additionalFunctions: [
-          (res) => tokenSaver(res),
-          () => pushItemInApi(),
-          () => pushDummyService(),
-          () => setTimeout(() => window.location.replace('/my-profile'), 100),
-        ],
-        dispatchFunc: [(res) => Login(res?.data?.data)],
-      })
-    );
+
+    try {
+      // Dispatch the action and wait for it to complete
+      const result = await dispatch(
+        create_module_redux({
+          url: "api/v1/user/signin",
+          payload,
+          setLoading,
+          additionalFunctions: [
+            (res) => tokenSaver(res), // Ensure this runs first
+            () => pushItemInApi(),
+            () => pushDummyService(),
+            () => setTimeout(() => window.location.replace('/my-profile'), 100),
+          ],
+          dispatchFunc: [(res) => Login(res?.data?.data)],
+        })
+      );
+
+      // Ensure token is saved before proceeding
+      const token = localStorage.getItem("Token");
+      if (!token) {
+        throw new Error("Token not saved in localStorage");
+      }
+
+      // Proceed with additional functions or redirect
+      console.log("Token saved successfully. Proceeding with additional functions...");
+    } catch (error) {
+      console.error("Error during submission:", error);
+    }
   };
+
+
 
   function BackNavigation() {
     navigate(-1);
